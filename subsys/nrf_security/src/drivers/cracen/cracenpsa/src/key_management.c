@@ -71,6 +71,7 @@ static psa_status_t check_secp_k1_alg_and_key_bits(psa_algorithm_t alg, size_t k
 		return PSA_ERROR_INVALID_ARGUMENT;
 	}
 }
+
 static psa_status_t check_secp_r1_alg_and_key_bits(psa_algorithm_t alg, size_t key_bits)
 {
 	if (!PSA_ALG_IS_ECDSA(alg) && alg != PSA_ALG_ECDH) {
@@ -622,6 +623,7 @@ static psa_status_t export_ecc_public_key_from_keypair(const psa_key_attributes_
 	*data_length = expected_pub_key_size;
 	return PSA_SUCCESS;
 }
+
 static psa_status_t export_rsa_public_key_from_keypair(const psa_key_attributes_t *attributes,
 						       const uint8_t *key_buffer,
 						       size_t key_buffer_size, uint8_t *data,

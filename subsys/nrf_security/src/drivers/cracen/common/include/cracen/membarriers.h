@@ -40,7 +40,7 @@ static inline void wmb(void)
 	 * Use at least a compiler memory barrier.
 	 */
 
-	/* Cortex-M33 does not support wmb, but cmb/DMB is more
+	/* Cortex-M33 does not support wmb, but CMB/DMB is more
 	 * restrictive and therefore safe to use.
 	 */
 	cmb();
@@ -66,7 +66,7 @@ static inline void rmb(void)
 	 * Use at least a compiler memory barrier.
 	 */
 
-	/* Cortex-M33 does not support rmb, but cmb/DMB is more
+	/* Cortex-M33 does not support RMB, but CMB/DMB is more
 	 * restrictive and therefore safe to use.
 	 */
 	cmb();

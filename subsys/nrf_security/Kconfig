@@ -38,7 +38,7 @@ config NRF_SECURITY
 	# entropy is provided by PSA and NRF_SECURITY on NRF54LX
 	default y if ENTROPY_PSA_CRYPTO_RNG && SOC_SERIES_NRF54LX
 	select DISABLE_MBEDTLS_BUILTIN if MBEDTLS
-	# Generating random requires a CRACEN PSA Crypto driver on nrf54L
+	# Generating random requires a CRACEN PSA Crypto driver on nRF54L
 	select PSA_CRYPTO_DRIVER_CRACEN if PSA_WANT_GENERATE_RANDOM && SOC_SERIES_NRF54LX
 	help
 	  Set this configuration to enable nRF Security. This provides
