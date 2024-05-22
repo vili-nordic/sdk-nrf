@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
 #
 
+# vidar: TODO add everything.
+
 if BUILD_WITH_TFM
 
 menu "Peripheral Secure mapping"
@@ -212,6 +214,14 @@ rsource "Kconfig.template.peripheral_secure"
 
 peripheral=EGU5
 peripheral_depends=$(dt_nodelabel_has_compat,egu5,$(DT_COMPAT_NORDIC_NRF_EGU))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=EGU10
+peripheral_depends=$(dt_nodelabel_has_compat,egu10,$(DT_COMPAT_NORDIC_NRF_EGU))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=EGU20
+peripheral_depends=$(dt_nodelabel_has_compat,egu20,$(DT_COMPAT_NORDIC_NRF_EGU))
 rsource "Kconfig.template.peripheral_secure"
 
 peripheral=PWM0
