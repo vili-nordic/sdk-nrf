@@ -22,7 +22,7 @@
 #include <autoconf.h>
 #include <zephyr/devicetree.h>
 
-#define BUTTON_PIN      DT_GPIO_PIN(DT_NODELABEL(button0), gpios)
+#define BUTTON_PIN      32+13//DT_GPIO_PIN(DT_NODELABEL(button0), gpios)
 
 #if defined(CONFIG_BOARD_NRF5340DK_NRF5340_CPUAPP_NS)
 #define SCK_PIN         47 /* P1.15 */
@@ -80,7 +80,7 @@ psa_flih_result_t tfm_timer10_irq_flih(void)
 
 	if (m_trigger_count == 10) {
 		m_trigger_count = 0;
-		nrf_egu_task_trigger(NRF_EGU20_NS, NRF_EGU_TASK_TRIGGER0);
+		nrf_egu_task_trigger(NRF_EGU10_NS, NRF_EGU_TASK_TRIGGER0);
 		return PSA_FLIH_SIGNAL;
 	}
 
@@ -90,7 +90,7 @@ psa_flih_result_t tfm_timer10_irq_flih(void)
 static void gpio_init(uint32_t pin)
 {
 	nrf_gpio_cfg_input(pin, NRF_GPIO_PIN_PULLUP);
-	nrf_gpiote_event_configure(NRF_GPIOTE20, M_GPIOTE_CHANNEL, pin,
+	nrf_gpiote_event_configure(NRF_GPIOTE20, M_GPIOTE_CHANNEL, 13,
 				   GPIOTE_CONFIG_POLARITY_HiToLo);
 	nrf_gpiote_event_enable(NRF_GPIOTE20, M_GPIOTE_CHANNEL);
 	nrf_gpiote_int_enable(NRF_GPIOTE20, NRFX_BIT(M_GPIOTE_CHANNEL));
@@ -100,7 +100,7 @@ psa_flih_result_t tfm_gpiote20_irq_flih(void)
 {
 	nrf_gpiote_event_clear(NRF_GPIOTE20, nrf_gpiote_in_event_get(M_GPIOTE_CHANNEL));
 
-	nrf_egu_task_trigger(NRF_EGU20_NS, NRF_EGU_TASK_TRIGGER0);
+	nrf_egu_task_trigger(NRF_EGU10_NS, NRF_EGU_TASK_TRIGGER0);
 	return PSA_FLIH_SIGNAL;
 }
 
@@ -154,6 +154,7 @@ static size_t generate_msg(uint8_t *msg_buf, uint8_t msg_len,
 
 static void send_msg(void)
 {
+#if 0
 	static uint8_t msg_buf[2 * 32 + 1];
 	size_t msg_len;
 
@@ -170,10 +171,12 @@ static void send_msg(void)
 	psa_eoi(TFM_SPIM30_IRQ_SIGNAL);
 
 	psa_irq_disable(TFM_SPIM30_IRQ_SIGNAL);
+#endif
 }
 
 static void spp_signals_process(psa_signal_t signals)
 {
+#if 1
 	if (signals & TFM_TIMER10_IRQ_SIGNAL) {
 		m_timer_count++;
 
@@ -188,6 +191,7 @@ static void spp_signals_process(psa_signal_t signals)
 
 		psa_reset_signal(TFM_GPIOTE20_IRQ_SIGNAL);
 	}
+#endif
 }
 
 static void spp_send(void)
@@ -216,33 +220,37 @@ static void spp_signal_handle(psa_signal_t signals)
 
 static void spp_init(void)
 {
-	//	LOG_INFFMT("int: %d\r\n", 14);
+	LOG_INFFMT("int: %d\r\n", 14);
+
 	timer_init(NRF_TIMER10, TIMER_RELOAD_VALUE);
 	timer_start(NRF_TIMER10);
 
 	psa_irq_enable(TFM_TIMER10_IRQ_SIGNAL);
 
-	gpio_init(13);
+	gpio_init(BUTTON_PIN);
 
-	//	LOG_INFFMT("int: %d\r\n", 13);
 	psa_irq_enable(TFM_GPIOTE20_IRQ_SIGNAL);
 
-	spim_init(SCK_PIN, MOSI_PIN);
+	//spim_init(SCK_PIN, MOSI_PIN);
 }
 
 psa_status_t tfm_spp_main(void)
 {
 	psa_signal_t signals = 0;
 
-	//spp_init();
+	spp_init();
 
 	while (1) {
+		LOG_INFFMT("int: %d\r\n", 15);
 		signals = psa_wait(PSA_WAIT_ANY, PSA_BLOCK);
+		LOG_INFFMT("int: %d\r\n", 17);
 		if (signals & TFM_SPP_SEND_SIGNAL) {
 			spp_send();
-		} else if (signals & TFM_SPP_PROCESS_SIGNAL) {
+		}
+		else if (signals & TFM_SPP_PROCESS_SIGNAL) {
 			spp_signal_handle(signals);
-		} else if (signals & (TFM_TIMER10_IRQ_SIGNAL |
+		}
+		else if (signals & (TFM_TIMER10_IRQ_SIGNAL |
 				      TFM_GPIOTE20_IRQ_SIGNAL)) {
 			/* Partition schedule was run while signals was set. */
 			spp_signals_process(signals);

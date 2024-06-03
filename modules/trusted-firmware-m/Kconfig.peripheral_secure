@@ -10,7 +10,6 @@ if BUILD_WITH_TFM
 
 menu "Peripheral Secure mapping"
 
-# TODO: NCSDK-22597: port this file (add peripherals) to 54L
 peripheral=UARTE00
 peripheral_depends=$(dt_nodelabel_has_compat,uart00,$(DT_COMPAT_NORDIC_NRF_UARTE))
 rsource "Kconfig.template.peripheral_secure"
@@ -26,7 +25,6 @@ rsource "Kconfig.template.peripheral_secure"
 peripheral=UARTE30
 peripheral_depends=$(dt_nodelabel_has_compat,uart30,$(DT_COMPAT_NORDIC_NRF_UARTE))
 rsource "Kconfig.template.peripheral_secure"
-# end TODO
 
 peripheral=FPU
 peripheral_depends=CPU_HAS_FPU
