@@ -62,7 +62,7 @@ dppic10: dppic@82000 {
 
 timer10: timer@85000 {
 	compatible = "nordic,nrf-timer";
-	status = "disabled";
+	status = "enabled";
 	reg = <0x85000 0x1000>;
 	cc-num = <8>;
 	max-bit-width = <32>;

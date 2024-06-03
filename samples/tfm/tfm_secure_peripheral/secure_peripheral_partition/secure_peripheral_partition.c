@@ -31,6 +31,8 @@
 #define SCK_PIN         13 /* P0.13 */
 #define MOSI_PIN        11 /* P0.11 */
 #endif
+#define SCK_PIN         13 /* P0.13 */
+#define MOSI_PIN        11 /* P0.11 */
 
 #define TIMER_RELOAD_VALUE (1*1000 * 1000)
 static uint32_t m_button_count;
@@ -70,15 +72,15 @@ static void timer_event_clear(NRF_TIMER_Type *timer)
 	nrf_timer_event_clear(timer, NRF_TIMER_EVENT_COMPARE0);
 }
 
-psa_flih_result_t tfm_timer1_irq_flih(void)
+psa_flih_result_t tfm_timer10_irq_flih(void)
 {
-	timer_event_clear(NRF_TIMER1);
+	timer_event_clear(NRF_TIMER10);
 
 	m_trigger_count++;
 
 	if (m_trigger_count == 10) {
 		m_trigger_count = 0;
-		nrf_egu_task_trigger(NRF_EGU0_NS, NRF_EGU_TASK_TRIGGER0);
+		nrf_egu_task_trigger(NRF_EGU20_NS, NRF_EGU_TASK_TRIGGER0);
 		return PSA_FLIH_SIGNAL;
 	}
 
@@ -88,46 +90,46 @@ psa_flih_result_t tfm_timer1_irq_flih(void)
 static void gpio_init(uint32_t pin)
 {
 	nrf_gpio_cfg_input(pin, NRF_GPIO_PIN_PULLUP);
-	nrf_gpiote_event_configure(NRF_GPIOTE0, M_GPIOTE_CHANNEL, pin,
+	nrf_gpiote_event_configure(NRF_GPIOTE20, M_GPIOTE_CHANNEL, pin,
 				   GPIOTE_CONFIG_POLARITY_HiToLo);
-	nrf_gpiote_event_enable(NRF_GPIOTE0, M_GPIOTE_CHANNEL);
-	nrf_gpiote_int_enable(NRF_GPIOTE0, NRFX_BIT(M_GPIOTE_CHANNEL));
+	nrf_gpiote_event_enable(NRF_GPIOTE20, M_GPIOTE_CHANNEL);
+	nrf_gpiote_int_enable(NRF_GPIOTE20, NRFX_BIT(M_GPIOTE_CHANNEL));
 }
 
-psa_flih_result_t tfm_gpiote0_irq_flih(void)
+psa_flih_result_t tfm_gpiote20_irq_flih(void)
 {
-	nrf_gpiote_event_clear(NRF_GPIOTE0, nrf_gpiote_in_event_get(M_GPIOTE_CHANNEL));
+	nrf_gpiote_event_clear(NRF_GPIOTE20, nrf_gpiote_in_event_get(M_GPIOTE_CHANNEL));
 
-	nrf_egu_task_trigger(NRF_EGU0_NS, NRF_EGU_TASK_TRIGGER0);
+	nrf_egu_task_trigger(NRF_EGU20_NS, NRF_EGU_TASK_TRIGGER0);
 	return PSA_FLIH_SIGNAL;
 }
 
 static void spim_init(uint32_t sck_pin, uint32_t mosi_pin)
 {
-	nrf_spim_pins_set(NRF_SPIM3, sck_pin, mosi_pin, NRF_SPIM_PIN_NOT_CONNECTED);
-	nrf_spim_configure(NRF_SPIM3, NRF_SPIM_MODE_0, NRF_SPIM_BIT_ORDER_MSB_FIRST);
+	nrf_spim_pins_set(NRF_SPIM30, sck_pin, mosi_pin, NRF_SPIM_PIN_NOT_CONNECTED);
+	nrf_spim_configure(NRF_SPIM30, NRF_SPIM_MODE_0, NRF_SPIM_BIT_ORDER_MSB_FIRST);
 #if SPIM0_FEATURE_HARDWARE_CSN_PRESENT
 	nrf_spim_csn_configure(NRF_SPIM3,
 		NRF_SPIM_PIN_NOT_CONNECTED,
 		NRF_SPIM_CSN_POL_LOW,
 		0);
 #endif
-	nrf_spim_frequency_set(NRF_SPIM3, NRF_SPIM_FREQ_2M);
-	nrf_spim_int_enable(NRF_SPIM3, NRF_SPIM_INT_ENDTX_MASK);
-	nrf_spim_enable(NRF_SPIM3);
+	//nrf_spim_frequency_set(NRF_SPIM30, NRF_SPIM_FREQ_2M);
+	nrf_spim_int_enable(NRF_SPIM30, NRF_SPIM_INT_ENDTX_MASK);
+	nrf_spim_enable(NRF_SPIM30);
 }
 
 static void spim_send(const uint8_t *buf, size_t len)
 {
-	nrf_spim_tx_buffer_set(NRF_SPIM3, buf, len);
-	nrf_spim_rx_buffer_set(NRF_SPIM3, NULL, 0);
+	nrf_spim_tx_buffer_set(NRF_SPIM30, buf, len);
+	nrf_spim_rx_buffer_set(NRF_SPIM30, NULL, 0);
 
-	nrf_spim_task_trigger(NRF_SPIM3, NRF_SPIM_TASK_START);
+	nrf_spim_task_trigger(NRF_SPIM30, NRF_SPIM_TASK_START);
 }
 
 static void spim_event_clear(void)
 {
-	nrf_spim_event_clear(NRF_SPIM3, NRF_SPIM_EVENT_ENDTX);
+	nrf_spim_event_clear(NRF_SPIM30, NRF_SPIM_EVENT_ENDTX);
 }
 
 static size_t generate_msg(uint8_t *msg_buf, uint8_t msg_len,
@@ -157,34 +159,34 @@ static void send_msg(void)
 
 	msg_len = generate_msg(msg_buf, sizeof(msg_buf),
 			       m_timer_count, m_button_count);
-	psa_irq_enable(TFM_SPIM3_IRQ_SIGNAL);
+	psa_irq_enable(TFM_SPIM30_IRQ_SIGNAL);
 
 	spim_send(msg_buf, msg_len);
-	if (psa_wait(TFM_SPIM3_IRQ_SIGNAL, PSA_BLOCK) != TFM_SPIM3_IRQ_SIGNAL) {
+	if (psa_wait(TFM_SPIM30_IRQ_SIGNAL, PSA_BLOCK) != TFM_SPIM30_IRQ_SIGNAL) {
 		psa_panic();
 	}
 
 	spim_event_clear();
-	psa_eoi(TFM_SPIM3_IRQ_SIGNAL);
+	psa_eoi(TFM_SPIM30_IRQ_SIGNAL);
 
-	psa_irq_disable(TFM_SPIM3_IRQ_SIGNAL);
+	psa_irq_disable(TFM_SPIM30_IRQ_SIGNAL);
 }
 
 static void spp_signals_process(psa_signal_t signals)
 {
-	if (signals & TFM_TIMER1_IRQ_SIGNAL) {
+	if (signals & TFM_TIMER10_IRQ_SIGNAL) {
 		m_timer_count++;
 
-		LOG_INFFMT("IRQ: TIMER1 count: %d\r\n", m_timer_count);
+		LOG_INFFMT("IRQ: TIMER10 count: %d\r\n", m_timer_count);
 
-		psa_reset_signal(TFM_TIMER1_IRQ_SIGNAL);
+		psa_reset_signal(TFM_TIMER10_IRQ_SIGNAL);
 	}
-	if (signals & TFM_GPIOTE0_IRQ_SIGNAL) {
+	if (signals & TFM_GPIOTE20_IRQ_SIGNAL) {
 		m_button_count++;
 
-		LOG_INFFMT("IRQ: GPIOTE0 count: %d\r\n", m_button_count);
+		LOG_INFFMT("IRQ: GPIOTE20 count: %d\r\n", m_button_count);
 
-		psa_reset_signal(TFM_GPIOTE0_IRQ_SIGNAL);
+		psa_reset_signal(TFM_GPIOTE20_IRQ_SIGNAL);
 	}
 }
 
@@ -214,14 +216,16 @@ static void spp_signal_handle(psa_signal_t signals)
 
 static void spp_init(void)
 {
-	timer_init(NRF_TIMER1, TIMER_RELOAD_VALUE);
-	timer_start(NRF_TIMER1);
+	//	LOG_INFFMT("int: %d\r\n", 14);
+	timer_init(NRF_TIMER10, TIMER_RELOAD_VALUE);
+	timer_start(NRF_TIMER10);
 
-	psa_irq_enable(TFM_TIMER1_IRQ_SIGNAL);
+	psa_irq_enable(TFM_TIMER10_IRQ_SIGNAL);
 
-	gpio_init(BUTTON_PIN);
+	gpio_init(13);
 
-	psa_irq_enable(TFM_GPIOTE0_IRQ_SIGNAL);
+	//	LOG_INFFMT("int: %d\r\n", 13);
+	psa_irq_enable(TFM_GPIOTE20_IRQ_SIGNAL);
 
 	spim_init(SCK_PIN, MOSI_PIN);
 }
@@ -230,7 +234,7 @@ psa_status_t tfm_spp_main(void)
 {
 	psa_signal_t signals = 0;
 
-	spp_init();
+	//spp_init();
 
 	while (1) {
 		signals = psa_wait(PSA_WAIT_ANY, PSA_BLOCK);
@@ -238,8 +242,8 @@ psa_status_t tfm_spp_main(void)
 			spp_send();
 		} else if (signals & TFM_SPP_PROCESS_SIGNAL) {
 			spp_signal_handle(signals);
-		} else if (signals & (TFM_TIMER1_IRQ_SIGNAL |
-				      TFM_GPIOTE0_IRQ_SIGNAL)) {
+		} else if (signals & (TFM_TIMER10_IRQ_SIGNAL |
+				      TFM_GPIOTE20_IRQ_SIGNAL)) {
 			/* Partition schedule was run while signals was set. */
 			spp_signals_process(signals);
 		} else {

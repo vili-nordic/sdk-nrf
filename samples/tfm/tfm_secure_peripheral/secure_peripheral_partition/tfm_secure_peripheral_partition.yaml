@@ -41,11 +41,11 @@
 
   "mmio_regions": [
     {
-      "name": "TFM_PERIPHERAL_TIMER1",
+      "name": "TFM_PERIPHERAL_TIMER10",
       "permission": "READ-WRITE"
     },
     {
-      "name": "TFM_PERIPHERAL_SPIM3",
+      "name": "TFM_PERIPHERAL_SPIM30",
       "permission": "READ-WRITE"
     },
     # MMIO region for GPIOTE0 not required.
@@ -53,18 +53,18 @@
   ],
   "irqs": [
     {
-      "source": "TFM_TIMER1_IRQ",
-      "name": "TFM_TIMER1_IRQ",
+      "source": "TFM_TIMER10_IRQ",
+      "name": "TFM_TIMER10_IRQ",
       "handling": "FLIH"
     },
     {
-      "source": "TFM_SPIM3_IRQ",
-      "name": "TFM_SPIM3_IRQ",
+      "source": "TFM_SPIM30_IRQ",
+      "name": "TFM_SPIM30_IRQ",
       "handling": "SLIH"
     },
     {
-      "source": "TFM_GPIOTE0_IRQ",
-      "name": "TFM_GPIOTE0_IRQ",
+      "source": "TFM_GPIOTE20_IRQ",
+      "name": "TFM_GPIOTE20_IRQ",
       "handling": "FLIH"
     },
   ],

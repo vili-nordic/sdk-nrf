@@ -64,6 +64,10 @@ peripheral=SPIM0
 peripheral_depends=$(dt_nodelabel_has_compat,spi0,$(DT_COMPAT_NORDIC_NRF_SPIM))
 rsource "Kconfig.template.peripheral_secure"
 
+peripheral=SPIM30
+peripheral_depends=$(dt_nodelabel_has_compat,spi30,$(DT_COMPAT_NORDIC_NRF_SPIM))
+rsource "Kconfig.template.peripheral_secure"
+
 peripheral=SPIS0
 peripheral_depends=$(dt_nodelabel_has_compat,spi0,$(DT_COMPAT_NORDIC_NRF_SPIS))
 rsource "Kconfig.template.peripheral_secure"
@@ -154,6 +158,10 @@ rsource "Kconfig.template.peripheral_secure"
 
 peripheral=TIMER1
 peripheral_depends=$(dt_nodelabel_has_compat,timer1,$(DT_COMPAT_NORDIC_NRF_TIMER))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=TIMER10
+peripheral_depends=$(dt_nodelabel_has_compat,timer10,$(DT_COMPAT_NORDIC_NRF_TIMER))
 rsource "Kconfig.template.peripheral_secure"
 
 peripheral=TIMER2
@@ -297,6 +305,13 @@ config NRF_GPIOTE0_SECURE
 	depends on $(dt_has_compat,$(DT_COMPAT_NORDIC_NRF_GPIOTE))
 	help
 	  GPIOTE0 is implemented with secure only security.
+	  This option only enables it to be used in the secure image.
+
+config NRF_GPIOTE20_SECURE #### TODO
+	bool "GPIOTE configured as secure peripheral"
+	depends on $(dt_has_compat,$(DT_COMPAT_NORDIC_NRF_GPIOTE))
+	help
+	  GPIOTE20 is implemented with secure only security.
 	  This option only enables it to be used in the secure image.
 
 config NRF_GPIO0_PIN_MASK_SECURE

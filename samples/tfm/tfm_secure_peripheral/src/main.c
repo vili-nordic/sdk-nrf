@@ -17,9 +17,9 @@ static K_SEM_DEFINE(spp_process_sem, 0, 1);
 static struct k_work process_work;
 static struct k_work_delayable send_work;
 
-static void egu0_handler(const void *context)
+static void egu10_handler(const void *context)
 {
-	nrf_egu_event_clear(NRF_EGU0, NRF_EGU_EVENT_TRIGGERED0);
+	nrf_egu_event_clear(NRF_EGU10, NRF_EGU_EVENT_TRIGGERED0);
 
 	k_work_submit(&process_work);
 }
@@ -54,9 +54,10 @@ static void send(struct k_work *work)
 
 int main(void)
 {
-	IRQ_CONNECT(EGU0_IRQn, EGU_INT_PRIO, egu0_handler, NULL, 0);
-	nrf_egu_int_enable(NRF_EGU0, NRF_EGU_INT_TRIGGERED0);
-	NVIC_EnableIRQ(EGU0_IRQn);
+	printk("main: \n");
+	IRQ_CONNECT(EGU10_IRQn, EGU_INT_PRIO, egu10_handler, NULL, 0);
+	nrf_egu_int_enable(NRF_EGU10, NRF_EGU_INT_TRIGGERED0);
+	NVIC_EnableIRQ(EGU10_IRQn);
 
 	k_work_init(&process_work, process);
 	k_work_init_delayable(&send_work, send);
