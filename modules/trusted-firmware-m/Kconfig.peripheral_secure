@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
 #
 
-# vidar: TODO add everything.
-
 if BUILD_WITH_TFM
 
 menu "Peripheral Secure mapping"
@@ -60,6 +58,26 @@ rsource "Kconfig.template.peripheral_secure"
 
 peripheral=SPIM0
 peripheral_depends=$(dt_nodelabel_has_compat,spi0,$(DT_COMPAT_NORDIC_NRF_SPIM))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=SPIM00
+peripheral_depends=$(dt_nodelabel_has_compat,spi00,$(DT_COMPAT_NORDIC_NRF_SPIM))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=SPIM20
+peripheral_depends=$(dt_nodelabel_has_compat,spi20,$(DT_COMPAT_NORDIC_NRF_SPIM))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=SPIM21
+peripheral_depends=$(dt_nodelabel_has_compat,spi21,$(DT_COMPAT_NORDIC_NRF_SPIM))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=SPIM22
+peripheral_depends=$(dt_nodelabel_has_compat,spi22,$(DT_COMPAT_NORDIC_NRF_SPIM))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=SPIM23
+peripheral_depends=$(dt_nodelabel_has_compat,spi23,$(DT_COMPAT_NORDIC_NRF_SPIM))
 rsource "Kconfig.template.peripheral_secure"
 
 peripheral=SPIM30
@@ -158,12 +176,36 @@ peripheral=TIMER1
 peripheral_depends=$(dt_nodelabel_has_compat,timer1,$(DT_COMPAT_NORDIC_NRF_TIMER))
 rsource "Kconfig.template.peripheral_secure"
 
+peripheral=TIMER2
+peripheral_depends=$(dt_nodelabel_has_compat,timer2,$(DT_COMPAT_NORDIC_NRF_TIMER))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=TIMER00
+peripheral_depends=$(dt_nodelabel_has_compat,timer00,$(DT_COMPAT_NORDIC_NRF_TIMER))
+rsource "Kconfig.template.peripheral_secure"
+
 peripheral=TIMER10
 peripheral_depends=$(dt_nodelabel_has_compat,timer10,$(DT_COMPAT_NORDIC_NRF_TIMER))
 rsource "Kconfig.template.peripheral_secure"
 
-peripheral=TIMER2
-peripheral_depends=$(dt_nodelabel_has_compat,timer2,$(DT_COMPAT_NORDIC_NRF_TIMER))
+peripheral=TIMER20
+peripheral_depends=$(dt_nodelabel_has_compat,timer20,$(DT_COMPAT_NORDIC_NRF_TIMER))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=TIMER21
+peripheral_depends=$(dt_nodelabel_has_compat,timer21,$(DT_COMPAT_NORDIC_NRF_TIMER))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=TIMER22
+peripheral_depends=$(dt_nodelabel_has_compat,timer22,$(DT_COMPAT_NORDIC_NRF_TIMER))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=TIMER23
+peripheral_depends=$(dt_nodelabel_has_compat,timer23,$(DT_COMPAT_NORDIC_NRF_TIMER))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=TIMER24
+peripheral_depends=$(dt_nodelabel_has_compat,timer24,$(DT_COMPAT_NORDIC_NRF_TIMER))
 rsource "Kconfig.template.peripheral_secure"
 
 peripheral=RTC0
@@ -246,6 +288,18 @@ peripheral=PWM3
 peripheral_depends=$(dt_nodelabel_has_compat,pwm3,$(DT_COMPAT_NORDIC_NRF_PWM))
 rsource "Kconfig.template.peripheral_secure"
 
+peripheral=PWM20
+peripheral_depends=$(dt_nodelabel_has_compat,pwm20,$(DT_COMPAT_NORDIC_NRF_PWM))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=PWM21
+peripheral_depends=$(dt_nodelabel_has_compat,pwm21,$(DT_COMPAT_NORDIC_NRF_PWM))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=PWM22
+peripheral_depends=$(dt_nodelabel_has_compat,pwm22,$(DT_COMPAT_NORDIC_NRF_PWM))
+rsource "Kconfig.template.peripheral_secure"
+
 peripheral=PDM
 peripheral_depends=$(dt_has_compat,$(DT_COMPAT_NORDIC_NRF_PDM))
 rsource "Kconfig.template.peripheral_secure"
@@ -298,18 +352,23 @@ peripheral=GPIO1
 peripheral_depends=$(dt_nodelabel_has_compat,gpio1,$(DT_COMPAT_NORDIC_NRF_GPIO))
 rsource "Kconfig.template.peripheral_secure"
 
+peripheral=GPIO2
+peripheral_depends=$(dt_nodelabel_has_compat,gpio2,$(DT_COMPAT_NORDIC_NRF_GPIO))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=GPIOTE20
+peripheral_depends=$(dt_nodelabel_has_compat,gpiote20,$(DT_COMPAT_NORDIC_NRF_GPIOTE))
+rsource "Kconfig.template.peripheral_secure"
+
+peripheral=GPIOTE30
+peripheral_depends=$(dt_nodelabel_has_compat,gpiote30,$(DT_COMPAT_NORDIC_NRF_GPIOTE))
+rsource "Kconfig.template.peripheral_secure"
+
 config NRF_GPIOTE0_SECURE
 	bool "GPIOTE configured as secure peripheral"
 	depends on $(dt_has_compat,$(DT_COMPAT_NORDIC_NRF_GPIOTE))
 	help
 	  GPIOTE0 is implemented with secure only security.
-	  This option only enables it to be used in the secure image.
-
-config NRF_GPIOTE20_SECURE #### TODO
-	bool "GPIOTE configured as secure peripheral"
-	depends on $(dt_has_compat,$(DT_COMPAT_NORDIC_NRF_GPIOTE))
-	help
-	  GPIOTE20 is implemented with secure only security.
 	  This option only enables it to be used in the secure image.
 
 config NRF_GPIO0_PIN_MASK_SECURE

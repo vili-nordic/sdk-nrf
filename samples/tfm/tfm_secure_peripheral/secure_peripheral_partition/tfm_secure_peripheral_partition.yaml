@@ -44,10 +44,10 @@
       "name": "TFM_PERIPHERAL_TIMER10",
       "permission": "READ-WRITE"
     },
-    # {
-    #   "name": "TFM_PERIPHERAL_SPIM30",
-    #   "permission": "READ-WRITE"
-    # },
+    {
+       "name": "TFM_PERIPHERAL_SPIM22",
+       "permission": "READ-WRITE"
+     },
     # MMIO region for GPIOTE0 not required.
     # GPIOTE0 is always configured as secure peripheral
   ],
@@ -58,8 +58,8 @@
       "handling": "FLIH"
     },
     {
-      "source": "TFM_SPIM30_IRQ",
-      "name": "TFM_SPIM30_IRQ",
+      "source": "TFM_SPIM22_IRQ",
+      "name": "TFM_SPIM22_IRQ",
       "handling": "SLIH"
     },
     {
